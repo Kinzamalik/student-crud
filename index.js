@@ -1,12 +1,8 @@
-// import express from "express";
-// import { ApolloServer, gql } from "apollo-server-express";
+
 import { ApolloServer } from "@apollo/server";
 import { startStandaloneServer } from "@apollo/server/standalone";
-// import knex from "./db/db";
 import { gql } from "apollo-server";
-
 import knex from "knex";
-// import knexfile from "./";
 
 const db = knex({
   client: "postgresql",
@@ -27,18 +23,18 @@ const db = knex({
 });
 
 const typeDefs = gql`
-  type Class {
-    id: ID!
-    name: String!
-    student: [Student]
-  }
-
   type Student {
     id: ID!
     name: String!
     email: String!
     gender: String!
-    class: Class!
+    class: Class
+  }
+
+  type Class {
+    id: ID!
+    name: String!
+    students: [Student]
   }
 
   type Query {
@@ -46,6 +42,7 @@ const typeDefs = gql`
     student: [Student]
     classById(id: ID!): Class
     studentById(id: ID!): Student
+    classWithStudents(classId: ID!): Class
   }
 
   type Mutation {
@@ -57,29 +54,34 @@ const typeDefs = gql`
     updateStudent(id: ID!, name: String!, email: String!, gender: String!, classId: Int!): Student
     deleteStudent(id: ID!): Boolean
   }
-`;
+`
+
 
 const resolvers = {
   Query: {
     class: async () => await db.select("*").from("class"),
-    // class: async () => [{ id: 1, name: "javascript" }],
     student: async () => await db.select("*").from("student"),
     classById: async (_, { id }) => await db.select("*").from("class").where("id", id).first(),
     studentById: async (_, { id }) => await db.select("*").from("student").where("id", id).first(),
+    classWithStudents: async (_, { classId }) => {
+      const result = await db
+        .select("class.*", "student.*")
+        .from("class")
+        .where("class.id", classId)
+        .leftJoin("student", "class.id", "student.classId");
+      return {
+        id: result[0].id,
+        name: result[0].name,
+        students: result.map((student) => ({
+          id: student.student_id,
+          name: student.student_name,
+          email: student.email,
+          gender: student.gender,
+        })),
+      };
+    },
   },
   Mutation: {
-    createClass: async (_, { name }) => {
-      const [id] = await db("class").insert({ name }, "id");
-      return { id, name };
-    },
-    updateClass: async (_, { id, name }) => {
-      await db("class").where({ id }).update({ name });
-      return { id, name };
-    },
-    deleteClass: async (_, { id }) => {
-      const result = await db("class").where({ id }).del();
-      return result > 0;
-    },
     createStudent: async (_, { name, email, gender, classId }) => {
       const [id] = await db("student").insert({ name, email, gender, classId }, "id");
       return { id, name, email, gender, classId };
@@ -94,16 +96,16 @@ const resolvers = {
     },
   },
   Class: {
-    student: async (parent) => {
-      const result = await db.select("*").from("student").where("classId", parent.id);
-      console.log("Class student:", result);
-      return result;
+    students: async (parent) => {
+      const students = await db.select("*").from("student").where("classId", parent.id);
+      console.log("Class students:", students);
+      return students;
     },
   },
 
   Student: {
     class: async (parent) => {
-      const result = await db.select("*").from("class").where("id", parent.classId);
+      const result = await db.select("*").from("class").where("id", parent.classId).first();
       console.log("Student class:", result);
       return result;
     },

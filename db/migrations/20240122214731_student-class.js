@@ -3,8 +3,6 @@ export const up = function (knex) {
     .createTable("class", function (table) {
       table.increments("id").primary();
       table.string("name", 255).notNullable();
-      table.integer("classId").unsigned().references("class.id").onDelete("CASCADE");   
-  //  table.foreign("classId").references("class.id");
     })
     .createTable("student", function (table) {
       table.increments("id").primary();
@@ -12,7 +10,16 @@ export const up = function (knex) {
       table.string("email", 255).notNullable();
       table.string("gender", 255).notNullable();
       table.integer("classId").unsigned();
-      table.foreign("classId").references("id").inTable("class");
+      table.foreign("classId").references("class.id").onDelete("CASCADE");
+    })
+    .table("student", function (table) {
+      table
+        .foreign("classId")
+        .references("class.id")
+        .inTable("class")
+        .onDelete("CASCADE")
+        .onUpdate("CASCADE")
+        .onCreateKnex();
     });
 };
 
