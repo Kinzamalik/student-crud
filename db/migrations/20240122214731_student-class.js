@@ -1,4 +1,4 @@
-export const up = function (knex) {
+const up = function (knex) {
   return knex.schema
     .createTable("class", function (table) {
       table.increments("id").primary();
@@ -10,21 +10,14 @@ export const up = function (knex) {
       table.string("email", 255).notNullable();
       table.string("gender", 255).notNullable();
       table.integer("classId").unsigned();
-      table.foreign("classId").references("class.id").onDelete("CASCADE");
-})
-    .table("student", function (table) {
-      table
-        .foreign("classId")
-        .references("class.id")
-        .inTable("class")
-        .onDelete("CASCADE")
-        .onUpdate("CASCADE")
-        .onCreateKnex();
+      table.foreign("classId").references("class.id").onDelete("CASCADE").onUpdate("CASCADE");
     });
 };
 
-export const down = function (knex) {
+const down = function (knex) {
   return knex.schema.dropTable("student").dropTable("class");
 };
 
-export const config = { transaction: false };
+const config = { transaction: false };
+
+module.exports = { up, down, config };
