@@ -11,7 +11,7 @@ export const up = function (knex) {
       table.string("gender", 255).notNullable();
       table.integer("classId").unsigned();
       table.foreign("classId").references("class.id").onDelete("CASCADE");
-    })
+})
     .table("student", function (table) {
       table
         .foreign("classId")

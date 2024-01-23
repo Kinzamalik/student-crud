@@ -28,13 +28,15 @@ const typeDefs = gql`
     name: String!
     email: String!
     gender: String!
-    class: Class
+    classId: ID
+    class: [Class]
   }
 
   type Class {
     id: ID!
     name: String!
-    students: [Student]
+    classId: ID
+    student: [Student]
   }
 
   type Query {
@@ -42,7 +44,7 @@ const typeDefs = gql`
     student: [Student]
     classById(id: ID!): Class
     studentById(id: ID!): Student
-    classWithStudents(classId: ID!): Class
+    classWithstudent(classId: ID!): Class
   }
 
   type Mutation {
@@ -54,7 +56,7 @@ const typeDefs = gql`
     updateStudent(id: ID!, name: String!, email: String!, gender: String!, classId: Int!): Student
     deleteStudent(id: ID!): Boolean
   }
-`
+`;
 
 
 const resolvers = {
@@ -63,24 +65,38 @@ const resolvers = {
     student: async () => await db.select("*").from("student"),
     classById: async (_, { id }) => await db.select("*").from("class").where("id", id).first(),
     studentById: async (_, { id }) => await db.select("*").from("student").where("id", id).first(),
-    classWithStudents: async (_, { classId }) => {
-      const result = await db
+
+    classWithstudent: async (_, { classId }) => {
+      const results = await db
         .select("class.*", "student.*")
         .from("class")
         .where("class.id", classId)
         .leftJoin("student", "class.id", "student.classId");
-      return {
-        id: result[0].id,
-        name: result[0].name,
-        students: result.map((student) => ({
+
+      if (results.length === 0) {
+        return null; // Return null or handle empty result as needed
+      }
+
+      const classData = {
+        id: results[0].id,
+        name: results[0].name,
+        student: results.map((student) => ({
           id: student.student_id,
           name: student.student_name,
           email: student.email,
           gender: student.gender,
         })),
       };
+
+      return classData;
+    },
+
+    class: async () => {
+      const classes = await db.select("*").from("class");
+      return classes;
     },
   },
+
   Mutation: {
     createStudent: async (_, { name, email, gender, classId }) => {
       const [id] = await db("student").insert({ name, email, gender, classId }, "id");
@@ -96,10 +112,10 @@ const resolvers = {
     },
   },
   Class: {
-    students: async (parent) => {
-      const students = await db.select("*").from("student").where("classId", parent.id);
-      console.log("Class students:", students);
-      return students;
+    student: async (parent) => {
+      const student = await db.select("*").from("student").where("classId", parent.id);
+      console.log("Class student:", student);
+      return student;
     },
   },
 
