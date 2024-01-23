@@ -1,0 +1,58 @@
+Arguments: 
+  C:\Program Files\nodejs\node.exe C:\Users\Dell\AppData\Roaming\npm\node_modules\yarn\bin\yarn.js add @apollo/server/standalone
+
+PATH: 
+  C:\Python312\Scripts\;C:\Python312\;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\ProgramData\chocolatey\bin;D:\Git\cmd;C:\Program Files\mingw64\bin;C:\Program Files\Microsoft SQL Server\Client SDK\ODBC\170\Tools\Binn\;C:\Program Files\Azure Data Studio\bin;D:\application\java\bin;C:\Users\Dell\AppData\Local\Programs\Python\Python311;C:\Users\Dell\AppData\Local\Programs\Python\Python311\Scripts;C:\Program Files\dotnet\;C:\msys64\mingw64\bin;C:\MinGW\bin;C:\Program Files\swigwin-4.2.0;C:\Program Files (x86)\Windows Kits\10\Windows Performance Toolkit\;C:\Users\Dell\AppData\Roaming\nvm;C:\Program Files\nodejs;C:\Program Files (x86)\nodejs\;C:\Users\Dell\AppData\Local\Microsoft\WindowsApps;D:\Microsoft VS Code\bin;C:\mingw\MinGW\bin;C:\Program Files\JetBrains\PyCharm Community Edition 2022.2.4\bin;;C:\Program Files\Azure Data Studio\bin;C:\ProgramData\Dell\GitHubDesktop\bin;E:\program files\mongo\;C:\Users\Dell\.dotnet\tools;C:\Users\Dell\AppData\Roaming\npm;C:\Users\Dell\AppData\Roaming\nvm;C:\Program Files\nodejs
+
+Yarn version: 
+  1.22.19
+
+Node version: 
+  20.10.0
+
+Platform: 
+  win32 ia32
+
+Trace: 
+  Error: https://registry.npmjs.org/@apollo%2fserver/standalone: Request "https://registry.npmjs.org/@apollo%2fserver/standalone" returned a 405
+      at params.callback [as _callback] (C:\Users\Dell\AppData\Roaming\npm\node_modules\yarn\lib\cli.js:66154:18)
+      at self.callback (C:\Users\Dell\AppData\Roaming\npm\node_modules\yarn\lib\cli.js:140890:22)
+      at Request.emit (node:events:514:28)
+      at Request.<anonymous> (C:\Users\Dell\AppData\Roaming\npm\node_modules\yarn\lib\cli.js:141862:10)
+      at Request.emit (node:events:514:28)
+      at IncomingMessage.<anonymous> (C:\Users\Dell\AppData\Roaming\npm\node_modules\yarn\lib\cli.js:141784:12)
+      at Object.onceWrapper (node:events:628:28)
+      at IncomingMessage.emit (node:events:526:35)
+      at endReadableNT (node:internal/streams/readable:1589:12)
+      at process.processTicksAndRejections (node:internal/process/task_queues:82:21)
+
+npm manifest: 
+  {
+    "name": "student-crud",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+      "dev": "nodemon index.js",
+      "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "type": "module",
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+      "apollo-server": "^2.5.0",
+      "body-parser": "^1.20.2",
+      "express": "^4.18.2",
+      "graphql": "^14.3.0",
+      "knex": "^3.1.0",
+      "pg": "^8.11.3",
+      "uuid": "^3.3.2"
+    }
+  }
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile

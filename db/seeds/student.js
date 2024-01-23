@@ -1,7 +1,6 @@
-
-exports.seed = async function(knex) {
+export const seed = async function (knex) {
   // Deletes ALL existing entries
-  await knex('student').del()
+  await knex("student").del();
   await knex("student").insert([
     {
       id: 1,
@@ -29,7 +28,7 @@ exports.seed = async function(knex) {
       name: "hamza",
       email: "hamza@google.com",
       gender: "F",
-      classId: 1,
+      classId: 4,
     },
   ]);
 };
